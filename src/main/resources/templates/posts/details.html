@@ -1,0 +1,183 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Post Details</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Post Details</h1>-->
+
+
+<!--<div>-->
+<!--    <h2>ID:</h2>-->
+<!--    <p th:text="${post.id}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Title:</h2>-->
+<!--    <p th:text="${post.title}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Excerpt:</h2>-->
+<!--    <p th:text="${post.excerpt}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Content:</h2>-->
+<!--    <p th:text="${post.content}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Author:</h2>-->
+<!--    <p th:text="${post.author.name}"></p> &lt;!&ndash; Assuming 'name' is a property in the User class &ndash;&gt;-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Published At:</h2>-->
+<!--    <p th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Is Published:</h2>-->
+<!--    <p th:text="${post.published ? 'Yes' : 'No'}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Created At:</h2>-->
+<!--    <p th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <h2>Updated At:</h2>-->
+<!--    <p th:text="${#dates.format(post.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--</div>-->
+
+<!--<a th:href="@{'/posts'}">Back to All Posts</a>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-heading {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .post-details {
+            margin-bottom: 15px;
+        }
+
+        .post-details h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .post-details p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="post-heading">
+        <h1>Post Details</h1>
+    </div>
+
+    <div class="post-details">
+        <h2>ID:</h2>
+        <p th:text="${post.id}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Title:</h2>
+        <p th:text="${post.title}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Excerpt:</h2>
+        <p th:text="${post.excerpt}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Content:</h2>
+        <p th:text="${post.content}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Author:</h2>
+        <p th:text="${post.author.name}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Published At:</h2>
+        <p th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Is Published:</h2>
+        <p th:text="${post.published ? 'Yes' : 'No'}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Created At:</h2>
+        <p th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    </div>
+
+    <div class="post-details">
+        <h2>Updated At:</h2>
+        <p th:text="${#dates.format(post.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    </div>
+
+    <div class="actions">
+        <a th:href="@{'/posts'}">Back to All Posts</a>
+    </div>
+</div>
+</body>
+
+</html>
+
+
+

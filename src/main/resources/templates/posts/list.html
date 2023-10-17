@@ -1,0 +1,171 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Blog Posts</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>All Blog Posts</h1>-->
+<!--<table>-->
+<!--  <thead>-->
+<!--  <tr>-->
+<!--    <th>Title</th>-->
+<!--    <th>Author</th>-->
+<!--    <th>Actions</th>-->
+<!--  </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+<!--  <tr th:each="post : ${posts}">-->
+<!--    <td th:text="${post.title}"></td>-->
+<!--    <td th:text="${post.author}"></td>-->
+<!--    <td>-->
+<!--      <a th:href="@{'/posts/' + ${post.id}}">View</a> |-->
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
+<!--    </td>-->
+<!--  </tr>-->
+<!--  </tbody>-->
+<!--</table>-->
+<!--<a th:href="@{/posts/new}">Create New Post</a>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Blog Posts</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>All Blog Posts</h1>-->
+<!--<table>-->
+<!--  <thead>-->
+<!--  <tr>-->
+<!--    <th>Id</th>-->
+<!--    <th>Title</th>-->
+<!--    <th>Author</th>-->
+<!--    <th>Excerpt</th>-->
+<!--    <th>Content</th>-->
+<!--    <th>Published At</th>-->
+<!--    <th>Created At</th>-->
+<!--    <th>Updated At</th>-->
+<!--    <th>Actions</th>-->
+<!--  </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+<!--  <tr th:each="post : ${posts}">-->
+<!--    <td th:text="${post.id}"></td>-->
+<!--    <td th:text="${post.title}"></td>-->
+<!--    <td th:text="${post.author}"></td>-->
+<!--    <td th:text="${post.excerpt}"></td>-->
+<!--    <td th:text="${post.content}"></td>-->
+<!--    <td th:text="${post.publishedAt}"></td>-->
+<!--    <td th:text="${post.createdAt}"></td>-->
+<!--    <td th:text="${post.updatedAt}"></td>-->
+<!--    <td>-->
+<!--      <a th:href="@{'/posts/' + ${post.id}}">View</a> |-->
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
+<!--    </td>-->
+<!--  </tr>-->
+<!--  </tbody>-->
+<!--</table>-->
+<!--<a th:href="@{/posts/new}">Create New Post</a>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Blog Posts</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 1rem;
+    }
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+    }
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-meta {
+      color: #777;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-content {
+      margin-top: 1rem;
+    }
+    .actions a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .create-post-link {
+      display: block;
+      margin-top: 1rem;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .create-post-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>All Blog Posts</h1>
+</header>
+<div class="container">
+  <div th:each="post : ${posts}" class="card">
+    <div class="card-title" th:text="${post.title}"></div>
+    <div class="card-meta">
+      <span th:text="${post.author.name}"></span> |
+      <span th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+    </div>
+    <div class="card-content" th:text="${post.content}"></div>
+    <div class="actions">
+      <a th:href="@{'/posts/' + ${post.id}}">Read More</a> |
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
+      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
+
+      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
+    </div>
+  </div>
+  <a th:href="@{'/posts/new'}" class="create-post-link">Create New Post</a>
+</div>
+</body>
+</html>
+

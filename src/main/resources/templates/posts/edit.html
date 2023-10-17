@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Post</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+    }
+
+    .form-actions input[type="submit"] {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-actions input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .back-link {
+      margin-top: 10px;
+      display: block;
+      font-size: 1rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Edit Post</h1>
+  <form th:action="@{'/posts/' + ${post.id}}" method="post" th:object="${post}">
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" th:value="*{title}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="excerpt">Excerpt:</label>
+      <input type="text" id="excerpt" name="excerpt" th:value="*{excerpt}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content:</label><br>
+      <textarea id="content" name="content" th:value="*{content}" required></textarea>
+    </div>
+
+    <div class="form-actions">
+      <input type="submit" value="Save Changes">
+    </div>
+  </form>
+  <a th:href="@{'/posts/' + ${post.id}}" class="back-link">Back to Post Details</a>
+</div>
+</body>
+
+</html>
