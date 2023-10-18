@@ -1,8 +1,10 @@
 package com.mountblue.blog.controller;
 
+import com.mountblue.blog.entitites.Comment;
 import com.mountblue.blog.entitites.Post;
 import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
+import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,13 @@ public class PostController {
     PostRepository postRepository;
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @Autowired
-    public PostController(PostService postService, UserService userService){
+    public PostController(PostService postService, UserService userService, CommentService commentService){
         this.postService = postService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
 
@@ -39,6 +43,7 @@ public class PostController {
     public String getPostById(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
+        model.addAttribute("post_comments",post.getComments());
         return "posts/details";
     }
 
@@ -122,7 +127,37 @@ public class PostController {
     }
 
 
+    @PostMapping("/posts/{postId}/comments")
+    public String addComment(@PathVariable Long postId,
+                             @RequestParam("name") String name,
+                             @RequestParam("email") String email,
+                             @RequestParam("comment") String comment) {
 
+        System.out.println(name + " -> " + email + " -> " + comment);
+        Post post = postService.getPostById(postId);
+
+        System.out.println("Post: " + post);
+        Comment newComment = new Comment();
+        newComment.setName(name);
+        newComment.setEmail(email);
+        newComment.setComment(comment);
+        newComment.setPost(post);
+
+        post.addComment(newComment);
+
+        postService.savePost(post);
+
+        return "redirect:/posts/{postId}"; // Redirect to the post details page after commenting
+    }
+
+
+    @GetMapping("/posts/{postId}/comments/{commentId}/edit")
+    public String editCommentForm(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+        Comment comment = commentService.getCommentById(commentId);
+        model.addAttribute("comment", comment);
+        return "comments/edit"; // Create a new Thymeleaf template for editing comments
+//        return "redirect:/posts/{postId}";
+    }
 
 
 }
