@@ -151,6 +151,11 @@ public class Post {
         comments.add(comment);
     }
 
+    public void removeComment(Comment comment){
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+
     @Override
     public String toString() {
         return "Post{" +

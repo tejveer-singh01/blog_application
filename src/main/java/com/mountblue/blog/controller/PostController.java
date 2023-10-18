@@ -79,6 +79,7 @@ public class PostController {
 //            // Redirect to an error page or handle as appropriate for your application
 //        }
         model.addAttribute("post", post);
+        model.addAttribute("content", post.getContent());
         return "posts/edit";
 
     }
@@ -155,8 +156,45 @@ public class PostController {
     public String editCommentForm(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
         Comment comment = commentService.getCommentById(commentId);
         model.addAttribute("comment", comment);
-        return "comments/edit"; // Create a new Thymeleaf template for editing comments
-//        return "redirect:/posts/{postId}";
+        model.addAttribute("post", comment.getPost()); // Add the associated post to the model
+        return "comments/edit";
+    }
+
+    @PostMapping("/posts/{postId}/comments/{commentId}")
+    public String saveEditedComment(@PathVariable Long postId,
+                                    @PathVariable Long commentId,
+                                    @RequestParam("name") String name,
+                                    @RequestParam("email") String email,
+                                    @RequestParam("comment") String comment){
+
+        Comment existingComment = commentService.getCommentById(commentId);
+
+        existingComment.setName(name);
+        existingComment.setEmail(email);
+        existingComment.setComment(comment);
+
+        commentService.saveComment(existingComment);
+
+        return "redirect:/posts/{postId}";
+    }
+
+    @GetMapping("/posts/{postId}/comments/{commentId}/delete")
+    public String deleteComment(@PathVariable Long postId,
+                                @PathVariable Long commentId){
+        // Retrieve the post by ID
+        Post post = postService.getPostById(postId);
+
+        // Retrieve the comment by ID
+        Comment comment = commentService.getCommentById(commentId);
+
+        // Remove the comment from the post's comments list
+        post.removeComment(comment);
+
+        // update the post in the database (this will remove the comment due to CascadeType.REMOVE)
+        postService.savePost(post);
+
+
+        return "redirect:/posts/{postId}";
     }
 
 

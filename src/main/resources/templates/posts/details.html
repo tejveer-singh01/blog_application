@@ -253,7 +253,7 @@
             <!-- Edit Button -->
             <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/edit'}">Edit</a>
             <!-- Delete Button (with confirmation dialog) -->
-<!--            <a href="#" th:onclick="'deleteComment(' + ${tempComment.id} + ')'">Delete</a>-->
+            <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/delete'}">Delete</a>
         </div>
     </div>
 
