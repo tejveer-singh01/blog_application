@@ -2,81 +2,104 @@
 <!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
 <!--<head>-->
 <!--  <meta charset="UTF-8">-->
-<!--  <title>Blog Posts</title>-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>All Blog Posts</title>-->
+<!--  <style>-->
+<!--    body {-->
+<!--      font-family: Arial, sans-serif;-->
+<!--      margin: 0;-->
+<!--      padding: 0;-->
+<!--      background-color: #f4f4f4;-->
+<!--    }-->
+<!--    header {-->
+<!--      background-color: #333;-->
+<!--      color: white;-->
+<!--      padding: 1rem;-->
+<!--      text-align: center;-->
+<!--    }-->
+<!--    .create-post-link {-->
+<!--      text-decoration: none;-->
+<!--      color: #007bff;-->
+<!--      font-weight: bold;-->
+<!--      margin-right: 20px;-->
+<!--    }-->
+<!--    .container {-->
+<!--      margin: 2rem auto;-->
+<!--      max-width: 800px;-->
+<!--      padding: 1rem;-->
+<!--    }-->
+<!--    .card {-->
+<!--      background-color: white;-->
+<!--      border-radius: 10px;-->
+<!--      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);-->
+<!--      margin-bottom: 1rem;-->
+<!--      padding: 1.5rem;-->
+<!--    }-->
+<!--    .card-title {-->
+<!--      font-size: 1.5rem;-->
+<!--      margin-bottom: 0.5rem;-->
+<!--    }-->
+<!--    .card-meta {-->
+<!--      color: #777;-->
+<!--      font-size: 0.8rem;-->
+<!--      margin-bottom: 0.5rem;-->
+<!--    }-->
+<!--    .card-content {-->
+<!--      margin-top: 1rem;-->
+<!--    }-->
+<!--    .actions a {-->
+<!--      margin-right: 10px;-->
+<!--      text-decoration: none;-->
+<!--      color: #333;-->
+<!--      font-weight: bold;-->
+<!--    }-->
+<!--    .create-post-link {-->
+<!--      display: block;-->
+<!--      margin-top: 1rem;-->
+<!--      text-decoration: none;-->
+<!--      color: #1b1d1f;-->
+<!--      font-weight: bold;-->
+<!--    }-->
+
+
+<!--  </style>-->
 <!--</head>-->
 <!--<body>-->
-<!--<h1>All Blog Posts</h1>-->
-<!--<table>-->
-<!--  <thead>-->
-<!--  <tr>-->
-<!--    <th>Title</th>-->
-<!--    <th>Author</th>-->
-<!--    <th>Actions</th>-->
-<!--  </tr>-->
-<!--  </thead>-->
-<!--  <tbody>-->
-<!--  <tr th:each="post : ${posts}">-->
-<!--    <td th:text="${post.title}"></td>-->
-<!--    <td th:text="${post.author}"></td>-->
-<!--    <td>-->
-<!--      <a th:href="@{'/posts/' + ${post.id}}">View</a> |-->
-<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
+<!--<header>-->
+<!--  <h1>All Blog Posts</h1>-->
+<!--</header>-->
+<!--<div class="container">-->
+<!--  <a th:href="@{'/posts/new'}" class="create-post-link">Create New Post</a>-->
+<!--  <div th:each="post : ${posts}" class="card">-->
+<!--    <div class="card-title" th:text="${post.title}"></div>-->
+<!--&lt;!&ndash;    <div class="card-title" th:text="${post.tags}"></div>&ndash;&gt;-->
+
+<!--      <label>Tag: </label>-->
+<!--      <span th:each="tempTag, traverse : ${post.tags}">-->
+<!--        <span th:text="${tempTag.name}"></span>-->
+<!--        <span th:unless="${traverse.last}">,</span>-->
+<!--        <span th:unless="${traverse.last}">&nbsp;</span>-->
+<!--      </span>-->
+
+<!--    <div class="card-meta">-->
+<!--      <label>Author: </label>-->
+<!--      <span th:text="${post.author.name}"></span> |-->
+<!--      <span th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>-->
+<!--    </div>-->
+<!--    <div class="card-content" th:text="${post.excerpt}"></div>-->
+<!--&lt;!&ndash;    <div class="card-content" th:text="${post.content}"></div>&ndash;&gt;-->
+<!--    <div class="actions">-->
+<!--      <a th:href="@{'/posts/' + ${post.id}}">Read More</a> |-->
+<!--&lt;!&ndash;      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |&ndash;&gt;-->
+<!--      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>-->
+
 <!--      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
-<!--    </td>-->
-<!--  </tr>-->
-<!--  </tbody>-->
-<!--</table>-->
-<!--<a th:href="@{/posts/new}">Create New Post</a>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--&lt;!&ndash;  <a th:href="@{'/posts/new'}" class="create-post-link">Create New Post</a>&ndash;&gt;-->
+<!--</div>-->
 <!--</body>-->
 <!--</html>-->
-
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8">-->
-<!--  <title>Blog Posts</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>All Blog Posts</h1>-->
-<!--<table>-->
-<!--  <thead>-->
-<!--  <tr>-->
-<!--    <th>Id</th>-->
-<!--    <th>Title</th>-->
-<!--    <th>Author</th>-->
-<!--    <th>Excerpt</th>-->
-<!--    <th>Content</th>-->
-<!--    <th>Published At</th>-->
-<!--    <th>Created At</th>-->
-<!--    <th>Updated At</th>-->
-<!--    <th>Actions</th>-->
-<!--  </tr>-->
-<!--  </thead>-->
-<!--  <tbody>-->
-<!--  <tr th:each="post : ${posts}">-->
-<!--    <td th:text="${post.id}"></td>-->
-<!--    <td th:text="${post.title}"></td>-->
-<!--    <td th:text="${post.author}"></td>-->
-<!--    <td th:text="${post.excerpt}"></td>-->
-<!--    <td th:text="${post.content}"></td>-->
-<!--    <td th:text="${post.publishedAt}"></td>-->
-<!--    <td th:text="${post.createdAt}"></td>-->
-<!--    <td th:text="${post.updatedAt}"></td>-->
-<!--    <td>-->
-<!--      <a th:href="@{'/posts/' + ${post.id}}">View</a> |-->
-<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
-<!--      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
-<!--    </td>-->
-<!--  </tr>-->
-<!--  </tbody>-->
-<!--</table>-->
-<!--<a th:href="@{/posts/new}">Create New Post</a>-->
-<!--</body>-->
-<!--</html>-->
-
 
 
 
@@ -84,93 +107,151 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Blog Posts</title>
+  <title>My Blog Application</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background-color: #fff;
     }
+
     header {
       background-color: #333;
-      color: white;
+      color: #fff;
       padding: 1rem;
       text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .create-post-link {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-      margin-right: 20px;
-    }
+
     .container {
-      margin: 2rem auto;
-      max-width: 800px;
-      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
     }
-    .card {
-      background-color: white;
-      border-radius: 10px;
+
+    .box {
+      background-color: #fff;
+      border: 1px solid #000;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 1rem;
+      margin: 10px;
       padding: 1.5rem;
+      width: 45%;
     }
-    .card-title {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+
+    .box h2 {
+      font-size: 1rem;
+      color: #000;
     }
-    .card-meta {
-      color: #777;
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
+
+    .box p {
+      color: #333;
     }
-    .card-content {
-      margin-top: 1rem;
-    }
+
     .actions a {
       margin-right: 10px;
       text-decoration: none;
-      color: #333;
-      font-weight: bold;
+      color: #000;
     }
-    .create-post-link {
+
+    .dropdown-content {
+      background-color: #fff;
+      border: 1px solid #000;
+      display: none;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .dropdown-content a {
       display: block;
-      margin-top: 1rem;
+      padding: 10px;
       text-decoration: none;
-      color: #1b1d1f;
-      font-weight: bold;
+      color: #000;
     }
 
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-sort {
+      display: flex;
+    }
+
+    .filter-sort .dropdown {
+      margin-right: 20px;
+    }
+
+    .login-btn {
+      text-decoration: none;
+      color: #fffbfb;
+      padding: 8px 16px;
+      border: 1px solid #000;
+      border-radius: 20px;
+      margin-left: 20px;
+    }
   </style>
 </head>
+
 <body>
 <header>
-  <h1>All Blog Posts</h1>
-</header>
-<div class="container">
-<!--  <a th:href="@{'/posts/new'}" class="create-post-link">Create New Post</a>-->
-  <div th:each="post : ${posts}" class="card">
-    <div class="card-title" th:text="${post.title}"></div>
-    <div class="card-meta">
-      <span th:text="${post.author.name}"></span> |
-      <span th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+  <a href="/posts/new" style="color: #fff;">Create Blog</a>
+  <h1>MY BLOG APPLICATION</h1>
+  <div class="search-container">
+    <div class="filter-sort">
+      <div class="dropdown">
+        <span style="color: #fff;">Filter</span>
+        <div class="dropdown-content">
+          <a href="#" style="color: #000;">Author 1</a>
+          <a href="#" style="color: #000;">Author 2</a>
+          <!-- Add more filter options as needed -->
+        </div>
+      </div>
+      <div class="dropdown">
+        <span style="color: #fff;">Sort</span>
+        <div class="dropdown-content">
+          <a href="#" style="color: #000;">By Date</a>
+          <a href="#" style="color: #000;">By Title</a>
+        </div>
+      </div>
+      <input type="text" placeholder="Search">
     </div>
-    <div class="card-content" th:text="${post.content}"></div>
-    <div class="actions">
-      <a th:href="@{'/posts/' + ${post.id}}">Read More</a> |
-<!--      <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit</a> |-->
-      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
+    <a href="#" class="login-btn">Login</a>
+  </div>
+</header>
 
+<div class="container">
+  <div th:each="post : ${posts}" class="box">
+    <h2 th:text="${post.title}"></h2>
+    <p><strong>Author: </strong><span th:text="${post.author.name}"></span></p>
+<!--    <p><strong>Tag: </strong><span th:each="tempTag : ${post.tags}" th:text="${tempTag}"></span></p>-->
+    <p><strong>Tag:</strong>
+      <span th:each="tag, iterStat : ${post.tags}">
+        <span th:text="${tag.name}"></span>
+        <span th:unless="${iterStat.last}">,</span> <!-- Add comma if not the last tag -->
+        <span th:unless="${iterStat.last}">&nbsp;</span> <!-- Add space if not the last tag -->
+      </span>
+    </p>
+    <p th:text="${post.excerpt}"></p>
+    <div class="actions">
+      <a th:href="@{'/posts/' + ${post.id}}">Read More</a>
+      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
       <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
     </div>
   </div>
-  <a th:href="@{'/posts/new'}" class="create-post-link">Create New Post</a>
 </div>
 </body>
+
 </html>
+
 

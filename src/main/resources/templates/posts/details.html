@@ -59,6 +59,213 @@
 
 
 
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Post Details</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            background-color: #f8f9fa;-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            max-width: 800px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--            background-color: white;-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        .post-heading {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .post-details {-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+
+<!--        .post-details h2 {-->
+<!--            font-size: 1.8rem;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+
+<!--        .post-details p {-->
+<!--            font-size: 1.2rem;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+
+<!--        .actions {-->
+<!--            text-align: center;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+
+<!--        .actions a {-->
+<!--            text-decoration: none;-->
+<!--            color: #272a2d;-->
+<!--            font-weight: bold;-->
+<!--            margin: 0 10px;-->
+<!--        }-->
+
+<!--        .actions a:hover {-->
+<!--            text-decoration: underline;-->
+<!--        }-->
+
+<!--        /*comment*/-->
+<!--        .comments-section {-->
+<!--            margin-top: 20px;-->
+<!--            padding: 20px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 5px;-->
+<!--        }-->
+<!--        .comment {-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .comment p {-->
+<!--            margin: 5px 0;-->
+<!--        }-->
+<!--        .comment-form {-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+<!--        .comment-form input[type="text"], .comment-form input[type="email"], .comment-form textarea {-->
+<!--            width: 50%;-->
+<!--            margin-bottom: 10px;-->
+<!--            padding: 8px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 4px;-->
+<!--        }-->
+<!--        .comment-form button {-->
+<!--            background-color: #222722;-->
+<!--            color: white;-->
+<!--            padding: 10px 20px;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <div class="post-heading">-->
+<!--        <h1>Post Details</h1>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>ID:</h2>-->
+<!--        <p th:text="${post.id}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Title:</h2>-->
+<!--        <p th:text="${post.title}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Excerpt:</h2>-->
+<!--        <p th:text="${post.excerpt}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Content:</h2>-->
+<!--        <p th:text="${post.content}"></p>-->
+<!--      </span>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Tag:</h2>-->
+<!--&lt;!&ndash;        <p th:text="${post.tags}"></p>&ndash;&gt;-->
+<!--        <span th:each="tempTag, traverse : ${post.tags}">-->
+<!--        <span th:text="${tempTag.name}"></span>-->
+<!--        <span th:unless="${traverse.last}">,</span>-->
+<!--        <span th:unless="${traverse.last}">&nbsp;</span>-->
+<!--    </div>-->
+<!--    <div class="post-details">-->
+<!--        <h2>Author:</h2>-->
+<!--        <p th:text="${post.author.name}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Published At:</h2>-->
+<!--        <p th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Is Published:</h2>-->
+<!--        <p th:text="${post.published ? 'Yes' : 'No'}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Created At:</h2>-->
+<!--        <p th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="post-details">-->
+<!--        <h2>Updated At:</h2>-->
+<!--        <p th:text="${#dates.format(post.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="actions">-->
+<!--        <a th:href="@{'/posts'}">Back to All Posts</a>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div class="comments-section">-->
+
+
+<!--    &lt;!&ndash; Comment Form &ndash;&gt;-->
+<!--    <div class="comment-form">-->
+<!--        <h3>Add a Comment</h3>-->
+<!--        <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post">-->
+<!--            <label for="name">Name:</label>-->
+<!--            <input type="text" id="name" name="name" required><br>-->
+<!--            <label for="email">Email:</label>-->
+<!--            <input type="email" id="email" name="email" required><br>-->
+<!--            <label for="comment">Comment:</label><br>-->
+<!--            <textarea id="comment" name="comment" rows="4" required></textarea><br>-->
+<!--            <button type="submit">Post Comment</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--    <h2>Comments</h2>-->
+<!--    <div th:each="tempComment : ${post_comments}" class="comment">-->
+<!--        <p><strong th:text="${tempComment.name}"></strong> <span><sub th:text="${tempComment.email}"></sub></span></p>-->
+<!--&lt;!&ndash;        <p><span th:text="${comment.email}"></span></p>&ndash;&gt;-->
+<!--        <p><span th:text="${tempComment.comment}"></span></p>-->
+
+<!--        &lt;!&ndash; Edit and Delete Buttons &ndash;&gt;-->
+<!--        <div>-->
+<!--            &lt;!&ndash; Edit Button &ndash;&gt;-->
+<!--            <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/edit'}">Edit</a>-->
+<!--            &lt;!&ndash; Delete Button (with confirmation dialog) &ndash;&gt;-->
+<!--            <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/delete'}">Delete</a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--&lt;!&ndash;<div th:each="tempComment: ${post_comments}">&ndash;&gt;-->
+<!--&lt;!&ndash;    <p th:text="*{tempComment.name}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;    <p th:text="*{tempComment.email}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;    <p th:text="*{tempComment.comment}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <p th:text="*{tempComment.createdAt}"></p>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <p th:text="*{tempComment.updatedAt}"></p>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--</body>-->
+
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -71,78 +278,49 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: #fff;
+            color: #000;
         }
 
         .container {
-            max-width: 800px;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-heading {
-            text-align: center;
-            margin-bottom: 20px;
         }
 
         .post-details {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .post-details h2 {
-            font-size: 1.8rem;
+        .post-details h1 {
+            font-size: 2rem;
+            text-align: center;
             margin-bottom: 10px;
         }
 
         .post-details p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             margin-bottom: 15px;
-        }
-
-        .actions {
-            text-align: center;
-            margin-top: 20px;
         }
 
         .actions a {
             text-decoration: none;
-            color: #272a2d;
-            font-weight: bold;
-            margin: 0 10px;
+            color: #000;
+            margin-right: 20px;
         }
 
-        .actions a:hover {
-            text-decoration: underline;
-        }
-
-        /*comment*/
-        .comments-section {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .comment {
-            margin-bottom: 15px;
-        }
-        .comment p {
-            margin: 5px 0;
-        }
-        .comment-form {
-            margin-top: 20px;
-        }
-        .comment-form input[type="text"], .comment-form input[type="email"], .comment-form textarea {
-            width: 50%;
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
             margin-bottom: 10px;
             padding: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid #000;
             border-radius: 4px;
         }
+
         .comment-form button {
-            background-color: #222722;
+            background-color: #000;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -150,58 +328,33 @@
             cursor: pointer;
         }
 
+        .comments-section .comment {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
 <body>
 <div class="container">
-    <div class="post-heading">
-        <h1>Post Details</h1>
+    <div class="post-details">
+        <h1 th:text="${post.title}"></h1>
+        <p><strong>Author: </strong><span th:text="${post.author.name}"></span></p>
+<!--        <p><strong>Tag: </strong><span th:text="${post.tags}"></span></p>-->
+<!--        <p><strong>Tag: </strong><span th:each="tempTag : ${post.tags}" th:text="${tempTag}"></span></p>-->
+        <p><strong>Tag:</strong>
+            <span th:each="tag, iterStat : ${post.tags}">
+                <span th:text="${tag.name}"></span>
+                <span th:unless="${iterStat.last}">,</span> <!-- Add comma if not the last tag -->
+                <span th:unless="${iterStat.last}">&nbsp;</span> <!-- Add space if not the last tag -->
+            </span>
+        </p>
+
+        <p><strong>Created At: </strong><span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
     </div>
 
     <div class="post-details">
-        <h2>ID:</h2>
-        <p th:text="${post.id}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Title:</h2>
-        <p th:text="${post.title}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Excerpt:</h2>
-        <p th:text="${post.excerpt}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Content:</h2>
+        <h3>Content:</h3>
         <p th:text="${post.content}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Author:</h2>
-        <p th:text="${post.author.name}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Published At:</h2>
-        <p th:text="${#dates.format(post.publishedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Is Published:</h2>
-        <p th:text="${post.published ? 'Yes' : 'No'}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Created At:</h2>
-        <p th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    </div>
-
-    <div class="post-details">
-        <h2>Updated At:</h2>
-        <p th:text="${#dates.format(post.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></p>
     </div>
 
     <div class="actions">
@@ -209,26 +362,7 @@
     </div>
 </div>
 
-
-<!--<div>-->
-<!--    <h2>Leave a Comment</h2>-->
-<!--    <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post">-->
-<!--        <label for="name">Name:</label>-->
-<!--        <input type="text" id="name" name="name" required><br>-->
-
-<!--        <label for="email">Email:</label>-->
-<!--        <input type="email" id="email" name="email" required><br>-->
-
-<!--        <label for="comment">Comment:</label><br>-->
-<!--        <textarea id="comment" name="comment" required></textarea><br>-->
-
-<!--        <button type="submit">Submit Comment</button>-->
-<!--    </form>-->
-<!--</div>-->
 <div class="comments-section">
-
-
-    <!-- Comment Form -->
     <div class="comment-form">
         <h3>Add a Comment</h3>
         <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post">
@@ -244,32 +378,15 @@
 
     <h2>Comments</h2>
     <div th:each="tempComment : ${post_comments}" class="comment">
-        <p><strong th:text="${tempComment.name}"></strong> <span><sub th:text="${tempComment.email}"></sub></span></p>
-<!--        <p><span th:text="${comment.email}"></span></p>-->
+        <p><strong th:text="${tempComment.name}"></strong> <sub th:text="${tempComment.email}"></sub></p>
         <p><span th:text="${tempComment.comment}"></span></p>
 
-        <!-- Edit and Delete Buttons -->
         <div>
-            <!-- Edit Button -->
             <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/edit'}">Edit</a>
-            <!-- Delete Button (with confirmation dialog) -->
             <a th:href="@{'/posts/' + ${post.id} + '/comments/' + ${tempComment.id} + '/delete'}">Delete</a>
         </div>
     </div>
-
 </div>
-
-<!--<div th:each="tempComment: ${post_comments}">-->
-<!--    <p th:text="*{tempComment.name}"></p>-->
-<!--    <p th:text="*{tempComment.email}"></p>-->
-<!--    <p th:text="*{tempComment.comment}"></p>-->
-<!--&lt;!&ndash;    <p th:text="*{tempComment.createdAt}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;    <p th:text="*{tempComment.updatedAt}"></p>&ndash;&gt;-->
-<!--</div>-->
-
 </body>
 
 </html>
-
-
-

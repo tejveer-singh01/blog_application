@@ -2,17 +2,21 @@ package com.mountblue.blog.controller;
 
 import com.mountblue.blog.entitites.Comment;
 import com.mountblue.blog.entitites.Post;
+import com.mountblue.blog.entitites.Tag;
 import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
 import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
+import com.mountblue.blog.service.TagService;
 import com.mountblue.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class PostController {
@@ -21,12 +25,14 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
+    private final TagService tagService;
 
     @Autowired
-    public PostController(PostService postService, UserService userService, CommentService commentService){
+    public PostController(PostService postService, UserService userService, CommentService commentService, TagService tagService){
         this.postService = postService;
         this.userService = userService;
         this.commentService = commentService;
+        this.tagService = tagService;
     }
 
 
@@ -54,12 +60,18 @@ public class PostController {
     }
 
     @PostMapping("/posts/new")
-    public String createPost(@ModelAttribute Post post){
+    public String createPost(@ModelAttribute Post post, @RequestParam("new_tags") String tags){
         // Check if the author is included in the form data
-        if (post.getAuthor() != null) {
-            // Save the user to the database first
-            userService.saveUser(post.getAuthor());
-        }
+//        if (post.getAuthor() != null) {
+//            // Save the user to the database first
+//            userService.saveUser(post.getAuthor());
+//        }
+
+        List<Tag> tagList = Arrays.stream(tags.split(","))
+                .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
+                .collect(Collectors.toList());
+
+        post.setTags(tagList);
 
 
         postService.savePost(post);
@@ -78,8 +90,12 @@ public class PostController {
 //            // Handle the case where the post with the given ID does not exist
 //            // Redirect to an error page or handle as appropriate for your application
 //        }
+        System.out.println("Post Content: " + post.getContent());
+
         model.addAttribute("post", post);
         model.addAttribute("content", post.getContent());
+
+//        model.addAttribute("tags", post.getTags());
         return "posts/edit";
 
     }
@@ -102,7 +118,9 @@ public class PostController {
     public String editPost(@PathVariable long postId,
                            @RequestParam("title") String title,
                            @RequestParam("excerpt") String excerpt,
-                           @RequestParam("content") String content){
+                           @RequestParam("tagg") List<String> tagg,
+                           @RequestParam("content") String content,
+                           Model model){
 
         System.out.println(postId + " -> "+title + " -> " + excerpt + " -> " + content);
 
@@ -110,16 +128,20 @@ public class PostController {
         post.setTitle(title);
         post.setExcerpt(excerpt);
         post.setContent(content);
+
+        // Convert tag names to Tag objects and set them in the post
+        List<Tag> tags = tagg.stream()
+                .map(tagService::createOrFetchTag)
+                .collect(Collectors.toList());
+        post.setTags(tags);
+
+
         postService.savePost(post);
 
         return "redirect:/posts";
     }
 
-//    @PostMapping("/posts/{id}/edit")
-//    public String editPost(@PathVariable Long id, @ModelAttribute Post post) {
-//        postService.savePost(post);
-//        return "redirect:/posts";
-//    }
+
 
     @GetMapping("/posts/{id}/delete")
     public String deletePost(@PathVariable Long id) {

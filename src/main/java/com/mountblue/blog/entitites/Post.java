@@ -26,30 +26,31 @@ public class Post {
     private User author;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date publishedAt;
+    private Date publishedAt = new Date();
     private boolean isPublished;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private Date updatedAt = new Date();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
 
 
     // Getters and setters
@@ -119,13 +120,7 @@ public class Post {
         isPublished = published;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
 
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -141,6 +136,14 @@ public class Post {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public void addComment(Comment comment){
@@ -173,139 +176,6 @@ public class Post {
                 '}';
     }
 }
-
-
-
-
-
-
-
-
-//@Entity
-//@Table(name = "Post")
-//public class Post {
-//
-//    // define fields
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private int id;
-//
-//    @Column(name = "title")
-//    private String title;
-//
-//    @Column(name = "excerpt")
-//    private String excerpt;
-//
-//    @Column(name = "content")
-//    private String content;
-//
-//    @Column(name = "author")
-//    private String author;
-//
-//    @Column(name = "published_at")
-//    private String published_at;
-//
-//    @Column(name = "is_published")
-//    private String is_published;
-//
-//    @Column(name = "created_at")
-//    private String created_at;
-//
-//    @Column(name = "updated_at")
-//    private String updated_at;
-//
-//
-//
-//    // define getters/setters
-//
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getExcerpt() {
-//        return excerpt;
-//    }
-//
-//    public void setExcerpt(String excerpt) {
-//        this.excerpt = excerpt;
-//    }
-//
-//    public String getContent() {
-//        return content;
-//    }
-//
-//    public void setContent(String content) {
-//        this.content = content;
-//    }
-//
-//    public String getAuthor() {
-//        return author;
-//    }
-//
-//    public void setAuthor(String author) {
-//        this.author = author;
-//    }
-//
-//    public String getPublished_at() {
-//        return published_at;
-//    }
-//
-//    public void setPublished_at(String published_at) {
-//        this.published_at = published_at;
-//    }
-//
-//    public String getIs_published() {
-//        return is_published;
-//    }
-//
-//    public void setIs_published(String is_published) {
-//        this.is_published = is_published;
-//    }
-//
-//    public String getCreated_at() {
-//        return created_at;
-//    }
-//
-//    public void setCreated_at(String created_at) {
-//        this.created_at = created_at;
-//    }
-//
-//    public String getUpdated_at() {
-//        return updated_at;
-//    }
-//
-//    public void setUpdated_at(String updated_at) {
-//        this.updated_at = updated_at;
-//    }
-//
-//    // define toString() method
-//    @Override
-//    public String toString() {
-//        return "Student{" +
-//                "id=" + id +
-//                ", title ='" + title + '\'' +
-//                ", except ='" + excerpt + '\'' +
-//                ", content ='" + content + '\'' +
-//                '}';
-//    }
-//
-//}
-
-
 
 
 

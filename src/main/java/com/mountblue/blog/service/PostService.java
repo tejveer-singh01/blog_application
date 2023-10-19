@@ -71,4 +71,8 @@ public class PostService {
         // Handle the case where the post does not exist, if needed
     }
 
+    public Post savePostWithTags(Post post) {
+        // Save the post with associated tags and return the saved post
+        return postRepository.saveAndFlush(post);
+    }
 }
