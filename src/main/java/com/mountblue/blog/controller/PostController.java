@@ -14,9 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -133,6 +134,7 @@ public class PostController {
         post.setTitle(title);
         post.setExcerpt(excerpt);
         post.setContent(content);
+//        post.setPublishedAt(publishDate);
 
         // Convert tag names to Tag objects and set them in the post
 //        List<Tag> tags = tagg.stream()
@@ -231,9 +233,16 @@ public class PostController {
 
     // Sorting
 
-    @GetMapping("/posts/sortByDate")
-    public String postsSortedByDate(Model model) {
-        List<Post> posts = postService.getAllPostsSortedByDate();
+    @GetMapping("/posts/sortByDateDesc")
+    public String postsSortedByDateDesc(Model model) {
+        List<Post> posts = postService.getAllPostsSortedByDateDesc();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @GetMapping("/posts/sortByDateAsc")
+    public String postsSortedByDateAsc(Model model) {
+        List<Post> posts = postService.getAllPostsSortedByDateAsc();
         model.addAttribute("posts", posts);
         return "posts/list";
     }
@@ -270,10 +279,76 @@ public class PostController {
     // Searching
 
     @GetMapping("/posts/search")
-    public String searchPostsByTitle(@RequestParam("keyword") String keyword, Model model) {
-        List<Post> searchResults = postService.searchPostsByTitle(keyword);
+    public String searchPostsByKeyword(@RequestParam("keyword") String keyword, Model model) {
+        List<Post> searchResults = postService.searchPostsByKeyword(keyword);
         model.addAttribute("posts", searchResults);
         return "posts/list";
     }
+
+
+    // filter
+
+    @GetMapping("/posts/filter")
+    public String showFilterPage(Model model) {
+
+        List<User> authors = postService.getAllAuthors();
+        List<Tag> tags = tagService.getAllTags();
+
+        // Add authors and tags to the model to be used in filter.html
+        model.addAttribute("authors", authors);
+        model.addAttribute("tags", tags);
+
+        List<Date> publishDates = postService.getAllPublishDates();
+        model.addAttribute("publishedDate", publishDates);
+
+        return "filter"; // Assuming "filter.html" is the filter page
+    }
+
+    @PostMapping("/posts/filterData")
+    public String applyFilter(@RequestParam(value = "authors", required = false) List<Long> authorIds,
+                              @RequestParam(value = "tags", required = false) List<Long> tagIds,
+                              @RequestParam(value = "publishDates", required = false) List<String> publishDateStrings,
+                              Model model) {
+        // Implement filtering logic based on the selected authors, tags, and dates
+        // Populate the model with filtered posts and return the view
+        // You can use postService to filter posts based on the selected criteria
+//        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, startDate, endDate);
+//        model.addAttribute("posts", filteredPosts);
+
+        // Convert publishDateStrings to List<Date>
+        List<Date> publishDates = convertToDates(publishDateStrings);
+
+        // Implement filtering logic based on the selected authors, tags, and dates
+        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, publishDates);
+        model.addAttribute("posts", filteredPosts);
+
+        return "posts/list"; // Assuming "list.html" is your view for displaying filtered posts
+    }
+
+
+    private List<Date> convertToDates(List<String> dateStrings) {
+        if (dateStrings == null) {
+            return new ArrayList<>(); // Return an empty list if dateStrings is null
+        }
+
+        List<Date> dates = new ArrayList<>();
+
+        // Date format pattern (adjust based on your date format in dateStrings)
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (String dateString : dateStrings) {
+            try {
+                // Parse the date string into a Date object
+                Date date = dateFormat.parse(dateString);
+                dates.add(date);
+            } catch (ParseException e) {
+                // Handle parsing errors if necessary
+                e.printStackTrace();
+            }
+        }
+
+        return dates;
+    }
+
 
 }

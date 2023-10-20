@@ -5,6 +5,7 @@ import com.mountblue.blog.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +30,10 @@ public class TagService {
         Tag newTag = new Tag();
         newTag.setName(tagName);
         return tagRepository.save(newTag);
+    }
+
+    public List<Tag> getAllTags() {
+        return tagRepository.findAll();
     }
 
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Posts</title>
+  <!-- Add your styles here -->
+</head>
+
+<body>
+<div class="container">
+  <h1>Filter Posts</h1>
+  <form th:action="@{/posts/filterData}" method="post">
+    <h2>Select Authors</h2>
+    <div th:each="author : ${authors}">
+      <label th:for="'author_' + ${author.id}">
+        <input type="checkbox" th:id="'author_' + ${author.id}" th:name="authors" th:value="${author.id}">
+        <span th:text="${author.name}"></span>
+      </label>
+    </div>
+
+    <div>
+      <h2>Select Published Dates</h2>
+      <div th:each="publishDate : ${publishedDate}">
+        <input type="checkbox" th:id="${'publishDate-' + #dates.format(publishDate, 'yyyyMMdd')}"
+               th:name="publishDates" th:value="${#dates.format(publishDate, 'yyyy-MM-dd')}" />
+        <label th:for="${'publishDate-' + #dates.format(publishDate, 'yyyyMMdd')}"
+               th:text="${#dates.format(publishDate, 'yyyy-MM-dd')}"></label>
+      </div>
+    </div>
+
+    <h2>Select Tags</h2>
+    <div th:each="tag : ${tags}">
+      <label th:for="'tag_' + ${tag.id}">
+        <input type="checkbox" th:id="'tag_' + ${tag.id}" th:name="tags" th:value="${tag.id}">
+        <span th:text="${tag.name}"></span>
+      </label>
+    </div>
+
+    <button type="submit">Apply Filters</button>
+  </form>
+</div>
+</body>
+
+</html>

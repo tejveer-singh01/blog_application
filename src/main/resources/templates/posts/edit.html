@@ -89,7 +89,7 @@
 
     <div class="form-group">
       <label for="tag">Tag:</label>
-      <input type="text" id="tag" name="tagg" th:value="${#strings.arrayJoin(post.tags, ', ')}" >
+      <input type="text" id="tag" name="tagg" th:value="${#strings.arrayJoin(post.tags, ' ')}" >
 <!--      <input type="text" id="tag" name="tagg" th:value="*{tags}" >-->
 
 <!--      <input type="text" id="tag" name="tagg" th:each="tempTag : *{tags}" th:value="${tempTag}" >-->
@@ -100,6 +100,11 @@
 <!--        <span th:unless="${traverse.last}">&nbsp;</span>-->
       </span>
     </div>
+
+<!--    <div class="form-group">-->
+<!--      <label for="publishedAt">Publish Date and Time:</label>-->
+<!--      <input type="datetime-local" id="publishedAt" name="publishedAtt" th:field="*{publishedAt}">-->
+<!--    </div>-->
 
     <div class="form-group">
       <label for="content">Content:</label><br>

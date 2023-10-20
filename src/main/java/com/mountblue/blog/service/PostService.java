@@ -1,6 +1,7 @@
 package com.mountblue.blog.service;
 
 import com.mountblue.blog.entitites.Post;
+import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -86,8 +89,12 @@ public class PostService {
 
     // Sorting
 
-    public List<Post> getAllPostsSortedByDate() {
+    public List<Post> getAllPostsSortedByDateDesc() {
         return postRepository.findAll(Sort.by(Sort.Order.desc("publishedAt")));
+    }
+
+    public List<Post> getAllPostsSortedByDateAsc() {
+        return postRepository.findAll(Sort.by(Sort.Order.asc("publishedAt")));
     }
 
     public List<Post> getAllPostsSortedByTitleAsc() {
@@ -111,11 +118,120 @@ public class PostService {
 
     // searching
 
-    public List<Post> searchPostsByTitle(String keyword) {
-        return postRepository.searchByTitle(keyword);
+    public List<Post> searchPostsByKeyword(String keywords) {
+//        return postRepository.searchByKeyword(keywords);
+
+        // Split input keywords into individual words
+        String[] keywordArray = keywords.split("\\s+");
+        Set<String> keywordSet = new HashSet<>(Arrays.asList(keywordArray));
+
+        // Perform search for each keyword and combine the results
+        List<Post> searchResults = keywordSet.stream()
+                .map(keyword -> postRepository.searchByKeyword(keyword))
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return searchResults;
     }
 
 
-    // pagination
+    // filter
+
+    public List<User> getAllAuthors() {
+        return postRepository.getAllAuthors();
+    }
+
+    public List<Post> getPostsByAuthorId(Long authorId) {
+        // Assuming you have a repository method to fetch posts by author ID
+        return postRepository.getPostsByAuthorId(authorId);
+    }
+
+    public List<Date> getAllPublishDates() {
+        List<Post> posts = postRepository.findAll(); // Retrieve all posts from the repository
+        return posts.stream()
+                .map(Post::getPublishedAt)
+                .distinct() // Remove duplicates
+                .collect(Collectors.toList());
+    }
+
+
+
+//    public List<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates) {
+//        List<Post> filteredPosts = new ArrayList<>();
+//
+//        for (Post post : getAllPosts()) {
+//            boolean matchesCriteria = true;
+//
+//            // Check author filter
+//            if (authorIds != null && !authorIds.isEmpty()) {
+//                if (!authorIds.contains(post.getAuthor().getId())) {
+//                    matchesCriteria = false;
+//                }
+//            }
+//
+//            // Check tag filter
+//            if (matchesCriteria && tagIds != null && !tagIds.isEmpty()) {
+//                boolean containsAllTags = post.getTags().stream().allMatch(tag -> tagIds.contains(tag.getId()));
+//                if (!containsAllTags) {
+//                    matchesCriteria = false;
+//                }
+//            }
+//
+//            // Check publish date filter
+//            if (matchesCriteria && publishDates != null && !publishDates.isEmpty()) {
+//                boolean containsAnyDate = publishDates.stream().anyMatch(date -> date.equals(post.getPublishedAt()));
+//                if (!containsAnyDate) {
+//                    matchesCriteria = false;
+//                }
+//            }
+//
+//            if (matchesCriteria) {
+//                filteredPosts.add(post);
+//            }
+//        }
+//
+//        return filteredPosts;
+//    }
+
+
+    public List<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates) {
+        List<Post> filteredPosts = new ArrayList<>();
+
+        for (Post post : getAllPosts()) {
+            boolean matchesCriteria = false;
+
+            // Check author filter
+            if (authorIds != null && !authorIds.isEmpty()) {
+                if (authorIds.contains(post.getAuthor().getId())) {
+                    matchesCriteria = true;
+                }
+            }
+
+            // Check tag filter
+            if (!matchesCriteria && tagIds != null && !tagIds.isEmpty()) {
+                boolean containsAnyTag = post.getTags().stream().anyMatch(tag -> tagIds.contains(tag.getId()));
+                if (containsAnyTag) {
+                    matchesCriteria = true;
+                }
+            }
+
+            // Check publish date filter
+            if (!matchesCriteria && publishDates != null && !publishDates.isEmpty()) {
+                boolean containsAnyDate = publishDates.stream().anyMatch(date -> date.equals(post.getPublishedAt()));
+                if (containsAnyDate) {
+                    matchesCriteria = true;
+                }
+            }
+
+            if (matchesCriteria) {
+                filteredPosts.add(post);
+            }
+        }
+
+        return filteredPosts;
+    }
+
+
 
 }
