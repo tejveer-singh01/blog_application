@@ -108,10 +108,14 @@ public class PostService {
         return postRepository.findAll(Sort.by(Sort.Order.desc("author.name")));
     }
 
+
     // searching
 
     public List<Post> searchPostsByTitle(String keyword) {
         return postRepository.searchByTitle(keyword);
     }
+
+
+    // pagination
 
 }

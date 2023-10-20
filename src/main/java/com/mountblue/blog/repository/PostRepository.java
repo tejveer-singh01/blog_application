@@ -13,6 +13,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Custom query methods can be added here
     Post saveAndFlush(Post post);
 
-    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    @Query("SELECT p FROM Post p JOIN p.author a LEFT JOIN p.tags t WHERE " +
+            "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(t.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Post> searchByTitle(@Param("keyword") String keyword);
 }
