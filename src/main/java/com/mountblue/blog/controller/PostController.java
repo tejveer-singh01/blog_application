@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -67,12 +68,16 @@ public class PostController {
 //            userService.saveUser(post.getAuthor());
 //        }
 
-        List<Tag> tagList = Arrays.stream(tags.split(","))
+//        List<Tag> tagList = Arrays.stream(tags.split(","))
+//                .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
+//                .collect(Collectors.toList());
+//
+//        post.setTags(tagList);
+
+        Set<Tag> tagSet = Arrays.stream(tags.split(","))
                 .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
-                .collect(Collectors.toList());
-
-        post.setTags(tagList);
-
+                .collect(Collectors.toSet());
+        post.setTags(tagSet);
 
         postService.savePost(post);
         return "redirect:/posts";
@@ -93,7 +98,7 @@ public class PostController {
         System.out.println("Post Content: " + post.getContent());
 
         model.addAttribute("post", post);
-        model.addAttribute("content", post.getContent());
+        model.addAttribute("postContent", post.getContent());
 
 //        model.addAttribute("tags", post.getTags());
         return "posts/edit";
@@ -118,7 +123,7 @@ public class PostController {
     public String editPost(@PathVariable long postId,
                            @RequestParam("title") String title,
                            @RequestParam("excerpt") String excerpt,
-                           @RequestParam("tagg") List<String> tagg,
+                           @RequestParam("tagg") String tagg,
                            @RequestParam("content") String content,
                            Model model){
 
@@ -130,11 +135,15 @@ public class PostController {
         post.setContent(content);
 
         // Convert tag names to Tag objects and set them in the post
-        List<Tag> tags = tagg.stream()
-                .map(tagService::createOrFetchTag)
-                .collect(Collectors.toList());
-        post.setTags(tags);
+//        List<Tag> tags = tagg.stream()
+//                .map(tagService::createOrFetchTag)
+//                .collect(Collectors.toList());
+//        post.setTags(tags);
 
+        Set<Tag> tagSet = Arrays.stream(tagg.split(","))
+                .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
+                .collect(Collectors.toSet());
+        post.setTags(tagSet);
 
         postService.savePost(post);
 
@@ -219,5 +228,52 @@ public class PostController {
         return "redirect:/posts/{postId}";
     }
 
+
+    // Sorting
+
+    @GetMapping("/posts/sortByDate")
+    public String postsSortedByDate(Model model) {
+        List<Post> posts = postService.getAllPostsSortedByDate();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @GetMapping("/posts/sortByTitleAsc")
+    public String postsSortedByTitleAsc(Model model){
+        List<Post> posts = postService.getAllPostsSortedByTitleAsc();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @GetMapping("/posts/sortByTitleDesc")
+    public String postsSortedByTitleDesc(Model model){
+        List<Post> posts = postService.getAllPostsSortedByTitleDesc();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @GetMapping("/posts/sortByAuthorAsc")
+    public String postsSortedByAuthorAsc(Model model) {
+        List<Post> posts = postService.getAllPostsSortedByAuthorAsc();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @GetMapping("/posts/sortByAuthorDesc")
+    public String postsSortedByAuthorDesc(Model model) {
+        List<Post> posts = postService.getAllPostsSortedByAuthorDesc();
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+
+    // Searching
+
+    @GetMapping("/posts/search")
+    public String searchPostsByTitle(@RequestParam("keyword") String keyword, Model model) {
+        List<Post> searchResults = postService.searchPostsByTitle(keyword);
+        model.addAttribute("posts", searchResults);
+        return "posts/list";
+    }
 
 }

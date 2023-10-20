@@ -89,10 +89,12 @@
 
     <div class="form-group">
       <label for="tag">Tag:</label>
-      <input type="text" id="tag" name="tagg" th:value="*{tags}" >
+      <input type="text" id="tag" name="tagg" th:value="${#strings.arrayJoin(post.tags, ', ')}" >
+<!--      <input type="text" id="tag" name="tagg" th:value="*{tags}" >-->
+
 <!--      <input type="text" id="tag" name="tagg" th:each="tempTag : *{tags}" th:value="${tempTag}" >-->
 
-      <!--      <span th:each="tempTag, traverse : ${post.tags}">-->
+<!--            <span th:each="tempTag, traverse : ${post.tags}">-->
 <!--        <span th:text="${tempTag.name}"></span>-->
 <!--        <span th:unless="${traverse.last}">,</span>-->
 <!--        <span th:unless="${traverse.last}">&nbsp;</span>-->
@@ -101,7 +103,7 @@
 
     <div class="form-group">
       <label for="content">Content:</label><br>
-      <textarea id="content" name="content" th:value="${content}" rows="7"></textarea>
+      <textarea id="content" name="content" th:value="${postContent}" rows="7"></textarea>
     </div>
 
     <div class="form-actions">

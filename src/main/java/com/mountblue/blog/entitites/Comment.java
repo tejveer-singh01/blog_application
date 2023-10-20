@@ -21,8 +21,8 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private Date createdAt;
-    private Date updatedAt;
+    private Date createdAt = new Date();
+    private Date updatedAt = new Date();
 
     // Getters and setters
 

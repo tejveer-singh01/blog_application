@@ -4,6 +4,7 @@ import com.mountblue.blog.entitites.Post;
 import com.mountblue.blog.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,7 +63,13 @@ public class PostService {
 
     public void deletePost(Long postId){
 
-        postRepository.deleteById(postId);
+        Post post = postRepository.findById(postId).orElse(null);
+
+        if(post != null) {
+            post.getTags().clear();
+            postRepository.save(post);
+            postRepository.deleteById(postId);
+        }
 
         // check if the post exists
 //        if(postRepository.existsById(postId)){
@@ -75,4 +82,36 @@ public class PostService {
         // Save the post with associated tags and return the saved post
         return postRepository.saveAndFlush(post);
     }
+
+
+    // Sorting
+
+    public List<Post> getAllPostsSortedByDate() {
+        return postRepository.findAll(Sort.by(Sort.Order.desc("publishedAt")));
+    }
+
+    public List<Post> getAllPostsSortedByTitleAsc() {
+        return postRepository.findAll(Sort.by(Sort.Order.asc("title")));
+    }
+
+    public List<Post> getAllPostsSortedByTitleDesc() {
+        return postRepository.findAll(Sort.by(Sort.Order.desc("title")));
+    }
+
+    // PostService.java
+
+    public List<Post> getAllPostsSortedByAuthorAsc() {
+        return postRepository.findAll(Sort.by(Sort.Order.asc("author.name")));
+    }
+
+    public List<Post> getAllPostsSortedByAuthorDesc() {
+        return postRepository.findAll(Sort.by(Sort.Order.desc("author.name")));
+    }
+
+    // searching
+
+    public List<Post> searchPostsByTitle(String keyword) {
+        return postRepository.searchByTitle(keyword);
+    }
+
 }

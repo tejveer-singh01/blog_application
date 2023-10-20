@@ -194,10 +194,24 @@
 
     .login-btn {
       text-decoration: none;
-      color: #fffbfb;
+      color: #ffffff;
       padding: 8px 16px;
-      border: 1px solid #000;
-      border-radius: 20px;
+      /*border: 1px solid #000;*/
+      /*border-radius: 20px;*/
+      margin-left: 20px;
+    }
+
+    /*.home-btn {*/
+    /*  text-decoration: none;*/
+    /*  color: #fffbfb;*/
+    /*  padding: 8px 16px;*/
+    /*  margin-right: 0; !* Set margin-right to 0 to remove the space *!*/
+    /*}*/
+
+    .create-btn {
+      text-decoration: none;
+      color: #fff;
+      padding: 8px 16px;
       margin-left: 20px;
     }
   </style>
@@ -205,12 +219,13 @@
 
 <body>
 <header>
-  <a href="/posts/new" style="color: #fff;">Create Blog</a>
+<!--  <a th:href="@{/posts}" class="home-btn">Home</a>-->
+  <a href="/posts/new" class="create-btn">Write Blog</a>
   <h1>MY BLOG APPLICATION</h1>
   <div class="search-container">
     <div class="filter-sort">
       <div class="dropdown">
-        <span style="color: #fff;">Filter</span>
+        <span style="color: #ffffff; cursor: pointer">Filter</span>
         <div class="dropdown-content">
           <a href="#" style="color: #000;">Author 1</a>
           <a href="#" style="color: #000;">Author 2</a>
@@ -218,13 +233,22 @@
         </div>
       </div>
       <div class="dropdown">
-        <span style="color: #fff;">Sort</span>
+        <span style="color: #ffffff; cursor: pointer">Sort</span>
         <div class="dropdown-content">
-          <a href="#" style="color: #000;">By Date</a>
-          <a href="#" style="color: #000;">By Title</a>
+          <a th:href="@{/posts/sortByDate}" style="color: #000;">By Date</a>
+          <a th:href="@{/posts/sortByTitleAsc}" style="color: #000;">By Title Asc</a>
+          <a th:href="@{/posts/sortByTitleDesc}" style="color: #000;">By Title Desc</a>
+          <a th:href="@{/posts/sortByAuthorAsc}" style="color: #000;">By Author Asc</a>
+          <a th:href="@{/posts/sortByAuthorDesc}" style="color: #000;">By Author Desc</a>
         </div>
       </div>
-      <input type="text" placeholder="Search">
+<!--      <input type="text" name="keyword" placeholder="Search">-->
+      <!-- Add this form inside your <div class="search-container"> element -->
+      <form th:action="@{/posts/search}" method="get">
+        <input type="text" name="keyword" placeholder="Search by Title, Author">
+        <button type="submit">Search</button>
+      </form>
+
     </div>
     <a href="#" class="login-btn">Login</a>
   </div>
@@ -236,12 +260,16 @@
     <p><strong>Author: </strong><span th:text="${post.author.name}"></span></p>
 <!--    <p><strong>Tag: </strong><span th:each="tempTag : ${post.tags}" th:text="${tempTag}"></span></p>-->
     <p><strong>Tag:</strong>
-      <span th:each="tag, iterStat : ${post.tags}">
-        <span th:text="${tag.name}"></span>
-        <span th:unless="${iterStat.last}">,</span> <!-- Add comma if not the last tag -->
-        <span th:unless="${iterStat.last}">&nbsp;</span> <!-- Add space if not the last tag -->
+      <span th:if="${post.tags}">
+        <span th:each="tag, iterStat : ${post.tags}">
+          <span th:text="${tag.name}"></span>
+          <span th:unless="${iterStat.last}">,</span> <!-- Add comma if not the last tag -->
+          <span th:unless="${iterStat.last}">&nbsp;</span> <!-- Add space if not the last tag -->
+        </span>
       </span>
+      <span th:unless="${post.tags}">No Tags</span>
     </p>
+
     <p th:text="${post.excerpt}"></p>
     <div class="actions">
       <a th:href="@{'/posts/' + ${post.id}}">Read More</a>
