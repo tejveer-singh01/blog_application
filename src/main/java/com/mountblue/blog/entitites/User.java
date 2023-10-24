@@ -2,6 +2,7 @@ package com.mountblue.blog.entitites;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,8 +25,10 @@ public class User {
     private String email;
     private String password;
 
-//    @OneToMany(mappedBy = "author")
-//    private List<Post> posts;
+    @OneToMany(mappedBy = "author", cascade = {
+            CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH
+    })
+    private List<Post> posts;
 
     @Column(name = "authorities")
     private String authorities = "ROLE_USER";
@@ -86,5 +89,13 @@ public class User {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void addPost(Post post){
+        if(posts == null){
+            posts = new ArrayList<>();
+        }
+        post.setAuthor(this);
+        posts.add(post);
     }
 }

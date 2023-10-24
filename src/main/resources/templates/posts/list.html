@@ -256,22 +256,40 @@
       background-color: #333;
     }
 
+
+    .logout-container {
+      text-align: right;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-right: 10px;
+    }
+
+    .logout-button {
+      background-color: white;
+      color: black;
+      border: 1px solid black;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+
   </style>
 </head>
 
 <body>
 <header>
 <!--  <a th:href="@{/posts}" class="home-btn">Home</a>-->
-<!--    <span th:if="${author != null}">-->
-<!--        <a href="/posts/new" class="create-btn">Write Blog</a>-->
-<!--    </span>-->
-  <a href="/posts/new" class="create-btn">Write Blog</a>
+    <span th:if="${author != null}">
+        <a href="/posts/new" class="create-btn">Write Blog</a>
+    </span>
+<!--  <a href="/posts/new" class="create-btn">Write Blog</a>-->
   <a th:href="@{/posts}" style="text-decoration: none; color: white"><h1>MY BLOG APPLICATION</h1></a>
   <div class="search-container">
     <div class="filter-sort">
 
       <div class="dropdown">
-<!--        <span style="color: black; cursor: pointer"><a th:href="@{'/post?id=' + ${author.id}}" class="filter-btn">My workspace</a></span>-->
+        <span style="color: black; cursor: pointer"><a href="/mybloglist" class="filter-btn">My workspace</a></span>
 
       </div>
 
@@ -300,9 +318,18 @@
       </form>
 
     </div>
-    <span ><a th:href="@{/showMyLoginPage}" class="login-btn">Login</a></span>
+    <span ><a th:if="${author == null}" th:href="@{/showMyLoginPage}" class="login-btn">Login</a></span>
   </div>
 </header>
+
+<!--<main th:if="${author != null}">-->
+<!--  <span>Welcome <span th:text="${author.name}"></span>!!!</span>-->
+<!--</main>-->
+
+<main th:if="${author != null}" style="margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 2rem;">
+  <span style="font-weight: bold;">Welcome <span th:text="${author.name}" style="color: #007bff;"></span>!!!</span>
+</main>
+
 
 <div class="container">
   <div th:each="post : ${posts}" class="box">
@@ -324,14 +351,14 @@
     <div class="actions">
       <a th:href="@{'/posts/' + ${post.id}}">Read More</a>
 
-<!--        <span th:if="${author != null}">-->
-<!--            <span th:if="${author.name.equals(post.author.name)}">-->
-<!--            <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>-->
-<!--            <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
-<!--         </span>-->
-<!--        </span>-->
-      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
-      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
+        <span th:if="${author != null}">
+            <span th:if="${author.name.equals(post.author.name)}">
+            <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
+            <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
+         </span>
+        </span>
+<!--      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>-->
+<!--      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
     </div>
   </div>
 </div>
@@ -352,26 +379,15 @@
   </ul>
 </div>
 
-<!--<div class="pagination">-->
-<!--  <ul>-->
-<!--    <li th:if="${currentPage > 0}">-->
-<!--      <a th:href="@{'/posts?page=' + ${currentPage - 1} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">Previous</a>-->
-<!--    </li>-->
-<!--    <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"-->
-<!--        th:classappend="${pageNumber} == ${currentPage} ? 'active' : ''">-->
-<!--      <a th:href="@{'/posts?page=' + ${pageNumber} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}"-->
-<!--         th:text="${pageNumber + 1}"></a>-->
-<!--    </li>-->
-<!--    <li th:if="${currentPage < totalPages - 1}">-->
-<!--      <a th:href="@{'/posts?page=' + ${currentPage + 1} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">Next</a>-->
-<!--    </li>-->
-<!--  </ul>-->
-<!--</div>-->
 
 <!--  Add a logout button-->
-<form action="#" th:action="@{/logout}" method="post">
-  <input type="submit" value="Logout" />
-</form>
+<div class="logout-container">
+  <span th:if="${author != null}">
+    <form th:action="@{/logout}" method="post">
+      <input type="submit" value="Logout" class="logout-button" />
+    </form>
+  </span>
+</div>
 
 </body>
 

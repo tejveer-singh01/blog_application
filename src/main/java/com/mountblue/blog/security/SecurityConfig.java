@@ -40,9 +40,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer ->
                         configurer
-//                                .requestMatchers("/posts/new").hasRole("AUTHOR")
 //                                .requestMatchers("/posts/new").authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/posts").permitAll()
+                                .requestMatchers("/signup").permitAll()
+                                .requestMatchers("/posts/{id}").permitAll()
+                                .requestMatchers("/posts/{postId}/comments").permitAll()
+                                .anyRequest().authenticated()
                         )
                         .formLogin(form ->
                                 form

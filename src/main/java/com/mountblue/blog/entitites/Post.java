@@ -22,7 +22,9 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {
+            CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH
+    })
     @JoinColumn(name = "author_id")
     private User author;
 

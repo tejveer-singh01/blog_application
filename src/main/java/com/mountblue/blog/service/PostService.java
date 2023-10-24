@@ -3,9 +3,11 @@ package com.mountblue.blog.service;
 import com.mountblue.blog.entitites.Post;
 import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
+import com.mountblue.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,9 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public PostService(PostRepository postRepository) {
@@ -337,5 +342,8 @@ public class PostService {
     }
 
 
-
+public List<Post> getMyBlogList() {
+        User user = userRepository.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        return postRepository.getPostsByAuthorId(user.getId());
+    }
 }

@@ -1,0 +1,231 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Blog Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .box {
+      background-color: #fff;
+      border: 1px solid #000;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      padding: 1.5rem;
+      width: 45%;
+    }
+
+    .box h2 {
+      font-size: 1rem;
+      color: #000;
+    }
+
+    .box p {
+      color: #333;
+    }
+
+    .actions a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .dropdown-content {
+      background-color: #fff;
+      border: 1px solid #000;
+      display: none;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-sort {
+      display: flex;
+    }
+
+    .filter-sort .dropdown {
+      margin-right: 20px;
+    }
+
+    .login-btn {
+      text-decoration: none;
+      color: #ffffff;
+      padding: 8px 16px;
+      /*border: 1px solid #000;*/
+      /*border-radius: 20px;*/
+      margin-left: 20px;
+    }
+
+    /*.home-btn {*/
+    /*  text-decoration: none;*/
+    /*  color: #fffbfb;*/
+    /*  padding: 8px 16px;*/
+    /*  margin-right: 0; !* Set margin-right to 0 to remove the space *!*/
+    /*}*/
+
+    .create-btn {
+      text-decoration: none;
+      color: #fff;
+      padding: 8px 16px;
+      margin-left: 20px;
+    }
+
+    .filter-btn {
+      text-decoration: none;
+      color: #000000;
+      background-color: #ffffff; /* Set your desired background color */
+      /*padding: 8px 16px;*/
+      /*border-radius: 5px; !* Optional: Adds rounded corners to the button *!*/
+      /*transition: background-color 0.3s ease; !* Optional: Smooth transition for hover effect *!*/
+    }
+
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pagination li {
+      display: inline;
+      margin: 0 5px;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      color: #000;
+      padding: 8px 16px;
+      border: 1px solid #000;
+    }
+
+    .pagination a.active {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .pagination a:hover {
+      background-color: #333;
+    }
+
+    .logout-container {
+      text-align: right;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-right: 10px;
+    }
+
+    .logout-button {
+      background-color: white;
+      color: black;
+      border: 1px solid black;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+<header>
+<!--  <a th:href="@{/posts}" class="home-btn">Home</a>-->
+<!--    <span th:if="${author != null}">-->
+<!--        <a href="/posts/new" class="create-btn">Write Blog</a>-->
+<!--    </span>-->
+  <a href="/posts/new" class="create-btn">Write Blog</a>
+  <a th:href="@{/posts}" style="text-decoration: none; color: white"><h1>MY BLOG APPLICATION</h1></a>
+  <div class="search-container">
+    <div class="filter-sort">
+
+      <div class="dropdown">
+        <span style="color: black; cursor: pointer"><a href="/mybloglist" class="filter-btn">My workspace</a></span>
+      </div>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div th:each="post : ${posts}" class="box">
+    <h2 th:text="${post.title}"></h2>
+    <p><strong>Author: </strong><span th:text="*{post.author.name}"></span></p>
+    <p><strong>Tag:</strong>
+      <span th:if="${post.tags}">
+        <span th:each="tag, iterStat : ${post.tags}">
+          <span th:text="${tag.name}"></span>
+          <span th:unless="${iterStat.last}">&nbsp;</span>
+        </span>
+      </span>
+      <span th:unless="${post.tags}">No Tags</span>
+    </p>
+
+    <p th:text="${post.excerpt}"></p>
+    <div class="actions">
+      <a th:href="@{'/posts/' + ${post.id}}">Read More</a>
+
+      <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
+      <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
+    </div>
+  </div>
+</div>
+
+
+<!--  Add a logout button-->
+<div class="logout-container">
+  <span th:if="${authorName != null}">
+    <form th:action="@{/logout}" method="post">
+      <input type="submit" value="Logout" class="logout-button" />
+    </form>
+  </span>
+</div>
+</body>
+
+</html>
+
+

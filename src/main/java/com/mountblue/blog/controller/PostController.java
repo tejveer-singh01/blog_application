@@ -106,6 +106,13 @@ public class PostController {
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         model.addAttribute("post_comments",post.getComments());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByName(username);
+        model.addAttribute("authorName", author);
+
         return "posts/details";
     }
 
@@ -135,10 +142,17 @@ public class PostController {
 //
 //        post.setTags(tagList);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByName(username);
+        author.addPost(post);
+
         Set<Tag> tagSet = Arrays.stream(tags.split(","))
                 .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
                 .collect(Collectors.toSet());
         post.setTags(tagSet);
+        author.addPost(post);
         postService.savePost(post);
         return "redirect:/posts";
     }
@@ -476,6 +490,18 @@ public class PostController {
         return dates;
     }
 
+    @GetMapping("/mybloglist")
+    public String getMyBlogList(Model model){
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByName(username);
+        model.addAttribute("authorName", author);
+
+
+        model.addAttribute("posts", postService.getMyBlogList());
+        return "workspace";
+    }
 
 }
