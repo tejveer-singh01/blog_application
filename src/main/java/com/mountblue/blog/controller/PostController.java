@@ -5,11 +5,20 @@ import com.mountblue.blog.entitites.Post;
 import com.mountblue.blog.entitites.Tag;
 import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
+import com.mountblue.blog.repository.UserRepository;
 import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import com.mountblue.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +33,10 @@ import java.util.stream.Collectors;
 public class PostController {
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
@@ -38,14 +51,55 @@ public class PostController {
     }
 
 
+//    @GetMapping("/posts")
+//    public String getAllPosts(Model model){
+//        List<Post> posts = postService.getAllPosts();
+//        System.out.println(posts);
+//        model.addAttribute("posts", posts);
+//
+//        return "posts/list";
+//    }
+
     @GetMapping("/posts")
-    public String getAllPosts(Model model){
-        List<Post> posts = postService.getAllPosts();
-        System.out.println(posts);
+    public String getAllPosts(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 10; // Number of posts per page
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByName(username);
+        model.addAttribute("author", author);
+
+        Page<Post> postsPage = postService.getAllPostsPaged(PageRequest.of(page, pageSize));
+        List<Post> posts = postsPage.getContent();
+
         model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", postsPage.getTotalPages());
 
         return "posts/list";
     }
+
+//    @GetMapping("/posts")
+//    public String getAllPosts(@RequestParam(defaultValue = "0") int page,
+//                              @RequestParam(defaultValue = "10") int size,
+//                              @RequestParam(required = false) String sortField,
+//                              @RequestParam(required = false) String sortOrder,
+//                              Model model) {
+//        // Use sortField and sortOrder parameters in your service method
+//        Page<Post> postsPage = postService.getAllPostsPagedAndSorted(page, size, sortField, sortOrder);
+//        List<Post> posts = postsPage.getContent();
+//
+//        model.addAttribute("posts", posts);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", postsPage.getTotalPages());
+//        model.addAttribute("sortField", sortField);
+//        model.addAttribute("sortOrder", sortOrder);
+//
+//        return "posts/list";
+//    }
+
+
 
     @GetMapping("/posts/{id}")
     public String getPostById(@PathVariable Long id, Model model) {
@@ -57,6 +111,12 @@ public class PostController {
 
     @GetMapping("/posts/new")
     public String createPostForm(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByName(username);
+        model.addAttribute("authorName", author);
+
         model.addAttribute("post", new Post());
         return "posts/create";
     }
@@ -79,7 +139,6 @@ public class PostController {
                 .map(tagName -> tagService.createOrFetchTag(tagName.trim()))
                 .collect(Collectors.toSet());
         post.setTags(tagSet);
-
         postService.savePost(post);
         return "redirect:/posts";
     }
@@ -233,19 +292,34 @@ public class PostController {
 
     // Sorting
 
+
+
     @GetMapping("/posts/sortByDateDesc")
-    public String postsSortedByDateDesc(Model model) {
-        List<Post> posts = postService.getAllPostsSortedByDateDesc();
-        model.addAttribute("posts", posts);
+    public String postsSortedByDateDesc(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        Model model) {
+        Page<Post> posts = postService.getAllPostsSortedByDateDesc(page, size);
+        model.addAttribute("posts", posts.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", posts.getTotalPages());
         return "posts/list";
     }
 
+
+
+
+
     @GetMapping("/posts/sortByDateAsc")
-    public String postsSortedByDateAsc(Model model) {
-        List<Post> posts = postService.getAllPostsSortedByDateAsc();
-        model.addAttribute("posts", posts);
+    public String postsSortedByDateAsc(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size,
+                                       Model model) {
+        Page<Post> postsPage = postService.getAllPostsSortedByDateAsc(page, size);
+        model.addAttribute("posts", postsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", postsPage.getTotalPages());
         return "posts/list";
     }
+
 
     @GetMapping("/posts/sortByTitleAsc")
     public String postsSortedByTitleAsc(Model model){
@@ -278,18 +352,33 @@ public class PostController {
 
     // Searching
 
+//    @GetMapping("/posts/search")
+//    public String searchPostsByKeyword(@RequestParam("keyword") String keyword, Model model) {
+//        List<Post> searchResults = postService.searchPostsByKeyword(keyword);
+//        model.addAttribute("posts", searchResults);
+//        return "posts/list";
+//    }
+
     @GetMapping("/posts/search")
-    public String searchPostsByKeyword(@RequestParam("keyword") String keyword, Model model) {
-        List<Post> searchResults = postService.searchPostsByKeyword(keyword);
-        model.addAttribute("posts", searchResults);
+    public String searchPostsByKeyword(@RequestParam("keyword") String keyword,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size,
+                                       Model model) {
+        Page<Post> searchResults = postService.searchPostsByKeyword(keyword, page, size);
+        model.addAttribute("posts", searchResults.getContent());
+        model.addAttribute("currentPage", searchResults.getNumber());
+        model.addAttribute("totalPages", searchResults.getTotalPages());
+        model.addAttribute("keyword", keyword); // Pass the search keyword to the view if needed
         return "posts/list";
     }
+
 
 
     // filter
 
     @GetMapping("/posts/filter")
-    public String showFilterPage(Model model) {
+    public String showFilterPage(@RequestParam(defaultValue = "0") int start,
+                                 @RequestParam(defaultValue = "10") int limit,Model model) {
 
         List<User> authors = postService.getAllAuthors();
         List<Tag> tags = tagService.getAllTags();
@@ -304,26 +393,63 @@ public class PostController {
         return "filter"; // Assuming "filter.html" is the filter page
     }
 
+//    @PostMapping("/posts/filterData")
+//    public String applyFilter(@RequestParam(value = "authors", required = false) List<Long> authorIds,
+//                              @RequestParam(value = "tags", required = false) List<Long> tagIds,
+//                              @RequestParam(value = "publishDates", required = false) List<String> publishDateStrings,
+//                              Model model) {
+//        // Implement filtering logic based on the selected authors, tags, and dates
+//        // Populate the model with filtered posts and return the view
+//        // You can use postService to filter posts based on the selected criteria
+////        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, startDate, endDate);
+////        model.addAttribute("posts", filteredPosts);
+//
+//        // Convert publishDateStrings to List<Date>
+//        List<Date> publishDates = convertToDates(publishDateStrings);
+//
+//        // Implement filtering logic based on the selected authors, tags, and dates
+//        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, publishDates);
+//        model.addAttribute("posts", filteredPosts);
+//
+//        return "posts/list"; // Assuming "list.html" is your view for displaying filtered posts
+//    }
+
+//    @PostMapping("/posts/filterData")
+//    public String applyFilter(@RequestParam(value = "authors", required = false) List<Long> authorIds,
+//                              @RequestParam(value = "tags", required = false) List<Long> tagIds,
+//                              @RequestParam(value = "publishDates", required = false) List<String> publishDateStrings,
+//                              @RequestParam(defaultValue = "0") int page,
+//                              @RequestParam(defaultValue = "10") int size,
+//                              Model model) {
+//
+//        List<Date> publishDates = convertToDates(publishDateStrings);
+//
+//        Page<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, publishDates, page, size);
+//        model.addAttribute("posts", filteredPosts.getContent());
+//        model.addAttribute("currentPage", filteredPosts.getNumber());
+//        model.addAttribute("totalPages", filteredPosts.getTotalPages());
+//
+//        return "posts/list"; // Assuming "list.html" is your view for displaying filtered posts with pagination
+//    }
+
+
     @PostMapping("/posts/filterData")
     public String applyFilter(@RequestParam(value = "authors", required = false) List<Long> authorIds,
                               @RequestParam(value = "tags", required = false) List<Long> tagIds,
                               @RequestParam(value = "publishDates", required = false) List<String> publishDateStrings,
+                              @PageableDefault(size = 10, sort = "publishedAt") Pageable pageable,
                               Model model) {
-        // Implement filtering logic based on the selected authors, tags, and dates
-        // Populate the model with filtered posts and return the view
-        // You can use postService to filter posts based on the selected criteria
-//        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, startDate, endDate);
-//        model.addAttribute("posts", filteredPosts);
 
-        // Convert publishDateStrings to List<Date>
         List<Date> publishDates = convertToDates(publishDateStrings);
 
-        // Implement filtering logic based on the selected authors, tags, and dates
-        List<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, publishDates);
-        model.addAttribute("posts", filteredPosts);
+        Page<Post> filteredPosts = postService.filterPosts(authorIds, tagIds, publishDates, pageable);
+        model.addAttribute("posts", filteredPosts.getContent());
+        model.addAttribute("currentPage", filteredPosts.getNumber());
+        model.addAttribute("totalPages", filteredPosts.getTotalPages());
 
-        return "posts/list"; // Assuming "list.html" is your view for displaying filtered posts
+        return "posts/list"; // Assuming "list.html" is your view for displaying filtered posts with pagination
     }
+
 
 
     private List<Date> convertToDates(List<String> dateStrings) {
@@ -349,6 +475,7 @@ public class PostController {
 
         return dates;
     }
+
 
 
 }

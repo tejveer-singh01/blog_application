@@ -214,68 +214,82 @@
       padding: 8px 16px;
       margin-left: 20px;
     }
+
+    .filter-btn {
+      text-decoration: none;
+      color: #000000;
+      background-color: #ffffff; /* Set your desired background color */
+      /*padding: 8px 16px;*/
+      /*border-radius: 5px; !* Optional: Adds rounded corners to the button *!*/
+      /*transition: background-color 0.3s ease; !* Optional: Smooth transition for hover effect *!*/
+    }
+
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pagination li {
+      display: inline;
+      margin: 0 5px;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      color: #000;
+      padding: 8px 16px;
+      border: 1px solid #000;
+    }
+
+    .pagination a.active {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .pagination a:hover {
+      background-color: #333;
+    }
+
   </style>
 </head>
 
 <body>
 <header>
 <!--  <a th:href="@{/posts}" class="home-btn">Home</a>-->
+<!--    <span th:if="${author != null}">-->
+<!--        <a href="/posts/new" class="create-btn">Write Blog</a>-->
+<!--    </span>-->
   <a href="/posts/new" class="create-btn">Write Blog</a>
-  <h1>MY BLOG APPLICATION</h1>
+  <a th:href="@{/posts}" style="text-decoration: none; color: white"><h1>MY BLOG APPLICATION</h1></a>
   <div class="search-container">
     <div class="filter-sort">
-<!--      <div class="dropdown">-->
-<!--        <span style="color: #ffffff; cursor: pointer">Filter</span>-->
-<!--        <div class="dropdown-content">-->
-<!--          <a href="#" style="color: #000;">Author 1</a>-->
-<!--          <a href="#" style="color: #000;">Author 2</a>-->
-<!--          &lt;!&ndash; Add more filter options as needed &ndash;&gt;-->
-<!--        </div>-->
-<!--      </div>-->
 
-<!--      <div class="dropdown">-->
-<!--        <span style="color: #ffffff; cursor: pointer">Filter</span>-->
-<!--        <div class="dropdown-content">-->
-<!--          &lt;!&ndash; Filter by Author Form &ndash;&gt;-->
-<!--          <form th:action="@{/posts/filterByAuthor}" method="get">-->
-<!--            <select name="authorId">-->
-<!--              <option value="1">Author 1</option>-->
-<!--              <option value="2">Author 2</option>-->
-<!--              &lt;!&ndash; Add more author options as needed &ndash;&gt;-->
-<!--            </select>-->
-<!--            <button type="submit">Filter by Author</button>-->
-<!--          </form>-->
+      <div class="dropdown">
+<!--        <span style="color: black; cursor: pointer"><a th:href="@{'/post?id=' + ${author.id}}" class="filter-btn">My workspace</a></span>-->
 
-<!--          &lt;!&ndash; Filter by Published Date Form &ndash;&gt;-->
-<!--          <form th:action="@{/posts/filterByDate}" method="get">-->
-<!--            <input type="date" name="startDate">-->
-<!--            <input type="date" name="endDate">-->
-<!--            <button type="submit">Filter by Date</button>-->
-<!--          </form>-->
+      </div>
 
-<!--          &lt;!&ndash; Filter by Tag Form &ndash;&gt;-->
-<!--          <form th:action="@{/posts/filterByTag}" method="get">-->
-<!--            <select name="tagId">-->
-<!--              <option value="1">Tag 1</option>-->
-<!--              <option value="2">Tag 2</option>-->
-<!--              &lt;!&ndash; Add more tag options as needed &ndash;&gt;-->
-<!--            </select>-->
-<!--            <button type="submit">Filter by Tag</button>-->
-<!--          </form>-->
-<!--        </div>-->
-<!--      </div>-->
-
-      <a th:href="@{'/posts/filter'}" class="filter-btn">Filter Posts</a>
+      <div class="dropdown">
+        <span style="color: black; cursor: pointer"><a th:href="@{'/posts/filter'}" class="filter-btn">Filter Posts</a></span>
+      </div>
 
       <div class="dropdown">
         <span style="color: #ffffff; cursor: pointer">Sort</span>
         <div class="dropdown-content">
+<!--          <a th:href="@{'/posts?sortField=title&sortOrder=desc'}">Sort by Title Desc</a>-->
           <a th:href="@{/posts/sortByDateDesc}" style="color: #000;">By Date Desc</a>
+<!--          <a th:href="@{'/posts/sortByDateDesc?page=' + ${currentPage} + '&size=10'}">By Date Desc</a>-->
           <a th:href="@{/posts/sortByDateAsc}" style="color: #000;">By Date Asc</a>
-          <a th:href="@{/posts/sortByTitleAsc}" style="color: #000;">By Title Asc</a>
-          <a th:href="@{/posts/sortByTitleDesc}" style="color: #000;">By Title Desc</a>
-          <a th:href="@{/posts/sortByAuthorAsc}" style="color: #000;">By Author Asc</a>
-          <a th:href="@{/posts/sortByAuthorDesc}" style="color: #000;">By Author Desc</a>
+<!--          <a th:href="@{/posts/sortByTitleAsc}" style="color: #000;">By Title Asc</a>-->
+<!--          <a th:href="@{/posts/sortByTitleDesc}" style="color: #000;">By Title Desc</a>-->
+<!--          <a th:href="@{/posts/sortByAuthorAsc}" style="color: #000;">By Author Asc</a>-->
+<!--          <a th:href="@{/posts/sortByAuthorDesc}" style="color: #000;">By Author Desc</a>-->
         </div>
       </div>
 <!--      <input type="text" name="keyword" placeholder="Search">-->
@@ -286,14 +300,14 @@
       </form>
 
     </div>
-    <a href="#" class="login-btn">Login</a>
+    <span ><a th:href="@{/showMyLoginPage}" class="login-btn">Login</a></span>
   </div>
 </header>
 
 <div class="container">
   <div th:each="post : ${posts}" class="box">
     <h2 th:text="${post.title}"></h2>
-    <p><strong>Author: </strong><span th:text="${post.author.name}"></span></p>
+    <p><strong>Author: </strong><span th:text="*{post.author.name}"></span></p>
 <!--    <p><strong>Tag: </strong><span th:each="tempTag : ${post.tags}" th:text="${tempTag}"></span></p>-->
     <p><strong>Tag:</strong>
       <span th:if="${post.tags}">
@@ -309,11 +323,56 @@
     <p th:text="${post.excerpt}"></p>
     <div class="actions">
       <a th:href="@{'/posts/' + ${post.id}}">Read More</a>
+
+<!--        <span th:if="${author != null}">-->
+<!--            <span th:if="${author.name.equals(post.author.name)}">-->
+<!--            <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>-->
+<!--            <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>-->
+<!--         </span>-->
+<!--        </span>-->
       <a th:href="@{'/update?id=' + ${post.id}}">Edit</a>
       <a th:href="@{'/posts/' + ${post.id} + '/delete'}">Delete</a>
     </div>
   </div>
 </div>
+
+<div class="pagination">
+  <ul>
+    <li th:if="${currentPage > 0}">
+      <a th:href="@{'/posts?page=' + ${currentPage - 1}}">Previous</a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+        th:classappend="${pageNumber == currentPage ? 'active' : ''}" >
+      <a th:href="@{'/posts?page=' + ${pageNumber}}"
+         th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:if="${currentPage < totalPages - 1}">
+      <a th:href="@{'/posts?page=' + ${currentPage + 1}}">Next</a>
+    </li>
+  </ul>
+</div>
+
+<!--<div class="pagination">-->
+<!--  <ul>-->
+<!--    <li th:if="${currentPage > 0}">-->
+<!--      <a th:href="@{'/posts?page=' + ${currentPage - 1} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">Previous</a>-->
+<!--    </li>-->
+<!--    <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"-->
+<!--        th:classappend="${pageNumber} == ${currentPage} ? 'active' : ''">-->
+<!--      <a th:href="@{'/posts?page=' + ${pageNumber} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}"-->
+<!--         th:text="${pageNumber + 1}"></a>-->
+<!--    </li>-->
+<!--    <li th:if="${currentPage < totalPages - 1}">-->
+<!--      <a th:href="@{'/posts?page=' + ${currentPage + 1} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">Next</a>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</div>-->
+
+<!--  Add a logout button-->
+<form action="#" th:action="@{/logout}" method="post">
+  <input type="submit" value="Logout" />
+</form>
+
 </body>
 
 </html>

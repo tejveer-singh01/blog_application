@@ -276,8 +276,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: #fff;
             color: #000;
         }
@@ -348,8 +346,8 @@
         <p><strong>Tag:</strong>
             <span th:each="tag, iterStat : ${post.tags}">
                 <span th:text="${tag.name}"></span>
-                <span th:unless="${iterStat.last}">,</span> <!-- Add comma if not the last tag -->
-                <span th:unless="${iterStat.last}">&nbsp;</span> <!-- Add space if not the last tag -->
+                <span th:unless="${iterStat.last}">,</span>
+                <span th:unless="${iterStat.last}">&nbsp;</span>
             </span>
         </p>
 

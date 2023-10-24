@@ -2,6 +2,8 @@ package com.mountblue.blog.entitites;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -10,11 +12,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @Column(unique = true, nullable = false)
+//    private String username;
+//
+//    @Column(nullable = false)
+//    private String password;
+//
+//    @Column(unique = true, nullable = false)
+//    private String email;
     private String name;
     private String email;
     private String password;
 
+//    @OneToMany(mappedBy = "author")
+//    private List<Post> posts;
+
+    @Column(name = "authorities")
+    private String authorities = "ROLE_USER";
+
     // Getters and setters
+
+
+    public String getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
+    }
 
     public Long getId() {
         return id;

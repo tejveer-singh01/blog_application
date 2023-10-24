@@ -5,7 +5,7 @@ import com.mountblue.blog.entitites.User;
 import com.mountblue.blog.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,12 +89,33 @@ public class PostService {
 
     // Sorting
 
-    public List<Post> getAllPostsSortedByDateDesc() {
-        return postRepository.findAll(Sort.by(Sort.Order.desc("publishedAt")));
+    public Page<Post> getAllPostsPagedAndSorted(int page, int size, String sortField, String sortOrder) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortOrder != null && sortOrder.equalsIgnoreCase("desc")) {
+            direction = Sort.Direction.DESC;
+        }
+
+        Sort sort = Sort.by(direction, sortField != null ? sortField : "defaultSortField");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return postRepository.findAll(pageable);
     }
 
-    public List<Post> getAllPostsSortedByDateAsc() {
-        return postRepository.findAll(Sort.by(Sort.Order.asc("publishedAt")));
+
+//    public List<Post> getAllPostsSortedByDateDesc() {
+//        return postRepository.findAll(Sort.by(Sort.Order.desc("publishedAt")));
+//    }
+
+    public Page<Post> getAllPostsSortedByDateDesc(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.desc("publishedAt"))));
+    }
+
+//    public List<Post> getAllPostsSortedByDateAsc() {
+//        return postRepository.findAll(Sort.by(Sort.Order.asc("publishedAt")));
+//    }
+
+    public Page<Post> getAllPostsSortedByDateAsc(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("publishedAt"))));
     }
 
     public List<Post> getAllPostsSortedByTitleAsc() {
@@ -118,23 +139,40 @@ public class PostService {
 
     // searching
 
-    public List<Post> searchPostsByKeyword(String keywords) {
-//        return postRepository.searchByKeyword(keywords);
+//    public List<Post> searchPostsByKeyword(String keywords) {
+//
+//        String[] keywordArray = keywords.split("\\s+");
+//        Set<String> keywordSet = new HashSet<>(Arrays.asList(keywordArray));
+//
+//        // Perform search for each keyword and combine the results
+//        List<Post> searchResults = keywordSet.stream()
+//                .map(keyword -> postRepository.searchByKeyword(keyword))
+//                .flatMap(List::stream)
+//                .distinct()
+//                .collect(Collectors.toList());
+//
+//        return searchResults;
+//    }
 
-        // Split input keywords into individual words
+
+    public Page<Post> searchPostsByKeyword(String keywords, int page, int size) {
         String[] keywordArray = keywords.split("\\s+");
         Set<String> keywordSet = new HashSet<>(Arrays.asList(keywordArray));
 
         // Perform search for each keyword and combine the results
         List<Post> searchResults = keywordSet.stream()
-                .map(keyword -> postRepository.searchByKeyword(keyword))
+                .map(keyword -> postRepository.searchByKeyword(keyword)) // Assuming this method is provided by your repository
                 .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());
 
-        return searchResults;
-    }
+        // Paginate the search results
+        int start = (int) page * size;
+        int end = Math.min(start + size, searchResults.size());
+        List<Post> paginatedResults = searchResults.subList(start, end);
 
+        return new PageImpl<>(paginatedResults, PageRequest.of(page, size), searchResults.size());
+    }
 
     // filter
 
@@ -195,7 +233,44 @@ public class PostService {
 //    }
 
 
-    public List<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates) {
+//    public List<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates) {
+//        List<Post> filteredPosts = new ArrayList<>();
+//
+//        for (Post post : getAllPosts()) {
+//            boolean matchesCriteria = false;
+//
+//            // Check author filter
+//            if (authorIds != null && !authorIds.isEmpty()) {
+//                if (authorIds.contains(post.getAuthor().getId())) {
+//                    matchesCriteria = true;
+//                }
+//            }
+//
+//            // Check tag filter
+//            if (!matchesCriteria && tagIds != null && !tagIds.isEmpty()) {
+//                boolean containsAnyTag = post.getTags().stream().anyMatch(tag -> tagIds.contains(tag.getId()));
+//                if (containsAnyTag) {
+//                    matchesCriteria = true;
+//                }
+//            }
+//
+//            // Check publish date filter
+//            if (!matchesCriteria && publishDates != null && !publishDates.isEmpty()) {
+//                boolean containsAnyDate = publishDates.stream().anyMatch(date -> date.equals(post.getPublishedAt()));
+//                if (containsAnyDate) {
+//                    matchesCriteria = true;
+//                }
+//            }
+//
+//            if (matchesCriteria) {
+//                filteredPosts.add(post);
+//            }
+//        }
+//
+//        return filteredPosts;
+//    }
+
+    public Page<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates, Pageable pageable) {
         List<Post> filteredPosts = new ArrayList<>();
 
         for (Post post : getAllPosts()) {
@@ -229,7 +304,36 @@ public class PostService {
             }
         }
 
-        return filteredPosts;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredPosts.size());
+        List<Post> content = filteredPosts.subList(start, end);
+
+        return new PageImpl<>(content, pageable, filteredPosts.size());
+    }
+
+//    public Page<Post> filterPosts(List<Long> authorIds, List<Long> tagIds, List<Date> publishDates, int page, int size) {
+//        // Get all posts from the repository
+//        List<Post> allPosts = postRepository.findAll();
+//
+//        // Filter posts based on authorIds, tagIds, and publishDates
+//        List<Post> filteredPosts = allPosts.stream()
+//                .filter(post -> (authorIds == null || authorIds.isEmpty() || authorIds.contains(post.getAuthor().getId()))
+//                        && (tagIds == null || tagIds.isEmpty() || post.getTags().stream().anyMatch(tag -> tagIds.contains(tag.getId())))
+//                        && (publishDates == null || publishDates.isEmpty() || publishDates.contains(post.getPublishedAt())))
+//                .collect(Collectors.toList());
+//
+//        // Paginate the filtered posts
+//        int start = page * size;
+//        int end = Math.min(start + size, filteredPosts.size());
+//        List<Post> content = filteredPosts.subList(start, end);
+//
+//        return new PageImpl<>(content, PageRequest.of(page, size), filteredPosts.size());
+//    }
+
+    // pagination
+
+    public Page<Post> getAllPostsPaged(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
 
